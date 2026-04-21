@@ -14,6 +14,12 @@ echo "PostgreSQL is ready."
 echo "Running migrations..."
 python manage.py migrate --noinput
 
+# Seed data if requested
+if [ "$SEED_DATA" = "True" ]; then
+  echo "Seeding database..."
+  python manage.py seed_data
+fi
+
 # Start development server
 echo "Starting Django server..."
 exec python manage.py runserver 0.0.0.0:8000

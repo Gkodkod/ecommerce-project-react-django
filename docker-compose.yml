@@ -31,6 +31,7 @@ services:
       - DB_PASSWORD=postgres
       - DB_HOST=db
       - DB_PORT=5432
+      - SEED_DATA=True
     ports:
       - '8000:8000'
     depends_on:
