@@ -418,21 +418,21 @@ class Command(BaseCommand):
         for username, items in CART_ITEMS:
             user = user_map[username]
             
-            # Robust logic for multiple carts (ForeignKey instead of OneToOne)
-            cart = Cart.objects.filter(user=user).first()
-            if not cart:
-                cart = Cart.objects.create(user=user)
+            # Use get_or_create now that it's a OneToOneField
+            cart, created = Cart.objects.get_or_create(user=user)
+            if created:
                 self.stdout.write(f"   [created] Cart for {username}")
             else:
                 self.stdout.write(f"   [already exists] Cart for {username}")
+
             for pname, qty in items:
                 product = product_map[pname]
                 
-                # Robust logic for multiple cart items (ForeignKey instead of UniqueConstraint)
-                cart_item = CartItem.objects.filter(cart=cart, product=product).first()
-                if not cart_item:
-                    cart_item = CartItem.objects.create(cart=cart, product=product, quantity=qty)
-                else:
+                # Robust logic for multiple cart items
+                cart_item, created = CartItem.objects.get_or_create(
+                    cart=cart, product=product, defaults={"quantity": qty}
+                )
+                if not created:
                     cart_item.quantity = qty
                     cart_item.save()
             self.stdout.write(f"   Cart for {username}  ({len(items)} item(s))")

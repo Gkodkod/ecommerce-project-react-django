@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { authFetch } from "../utils/auth";
 import { useCart } from "../context/CartContext";
@@ -14,6 +14,26 @@ function CheckoutPage() {
   const nav = useNavigate();
   const { clearCart } = useCart();
   const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await authFetch(`${BASEURL}/api/profile/`);
+        const data = await res.json();
+        if (res.ok) {
+          setForm((prev) => ({
+            ...prev,
+            name: data.full_name || "",
+            address: data.address || "",
+            phone: data.phone || "",
+          }));
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      }
+    };
+    fetchProfile();
+  }, [BASEURL]);
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,7 +73,8 @@ function CheckoutPage() {
             onChange={handleChange}
             placeholder="Your Name"
             required
-            className="w-full p-2 border rounded"
+            readOnly
+            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
           />
 
           <input
@@ -62,7 +83,8 @@ function CheckoutPage() {
             onChange={handleChange}
             placeholder="Address"
             required
-            className="w-full p-2 border rounded"
+            readOnly
+            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
           />
 
           <input
@@ -71,7 +93,8 @@ function CheckoutPage() {
             onChange={handleChange}
             placeholder="Phone Number"
             required
-            className="w-full p-2 border rounded"
+            readOnly
+            className="w-full p-2 border rounded bg-gray-100 cursor-not-allowed"
           />
 
           <select

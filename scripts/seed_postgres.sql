@@ -215,7 +215,7 @@ INSERT INTO store_cart (user_id, created_at)
 SELECT u.id, NOW()
 FROM (VALUES ('alice_shop'), ('bob_buys'), ('carol_carts')) AS c(username)
 JOIN auth_user u ON u.username = c.username
-ON CONFLICT DO NOTHING;
+ON CONFLICT (user_id) DO NOTHING;
 
 -- ===========================================================================
 -- 8. CART ITEMS

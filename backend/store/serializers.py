@@ -1,7 +1,20 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from .models import Cart, CartItem, Category, Product
+from .models import Cart, CartItem, Category, Product, UserProfile
+
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    full_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = UserProfile
+        fields = ["full_name", "address", "phone"]
+
+    def get_full_name(self, obj):
+        user = obj.user
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        return full_name if full_name else user.username
 
 
 class CategorySerializer(serializers.ModelSerializer):

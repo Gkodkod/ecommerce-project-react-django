@@ -45,7 +45,7 @@ class OrderItem(models.Model):
         return f"{self.quantity} x {self.product.name}"
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

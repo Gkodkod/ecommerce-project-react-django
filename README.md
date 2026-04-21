@@ -226,7 +226,7 @@ npm run dev
 
 ```
 Category ──< Product
-User ──< Cart ──< CartItem >── Product
+User ── Cart ──< CartItem >── Product
 User ──< Order ──< OrderItem >── Product
 User ── UserProfile
 ```
