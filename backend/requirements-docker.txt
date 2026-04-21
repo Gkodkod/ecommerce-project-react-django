@@ -1,0 +1,5 @@
+# Docker-specific requirements (Linux only)
+# Extends base requirements.txt with packages that need pre-built Linux wheels
+-r requirements.txt
+psycopg[binary]
+Pillow
