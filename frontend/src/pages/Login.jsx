@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { saveTokens } from "../utils/auth";
+import { useCart } from "../context/CartContext";
 
 function Login() {
+  const { refreshAuth } = useCart();
   const BASE = import.meta.env.VITE_DJANGO_BASE_URL;
   const [form, setForm] = useState({ username: "", password: "" });
   const [msg, setMsg] = useState("");
@@ -22,6 +24,7 @@ function Login() {
       const data = await res.json();
       if (res.ok) {
         saveTokens(data);
+        refreshAuth();
         setMsg("Login successful!");
         setTimeout(()=>nav("/"), 800);
       } else {

@@ -32,6 +32,7 @@ services:
       - DB_HOST=db
       - DB_PORT=5432
       - SEED_DATA=True
+      - PYTHONUNBUFFERED=1
     ports:
       - '8000:8000'
     depends_on:
@@ -51,6 +52,7 @@ services:
       - '5173:5173'
     environment:
       - VITE_DJANGO_BASE_URL=http://localhost:8000
+      - DEBUG=vite:hmr
     depends_on:
       - backend
 

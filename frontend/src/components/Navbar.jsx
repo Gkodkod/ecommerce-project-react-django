@@ -3,15 +3,14 @@ import {useCart} from '../context/CartContext.jsx';
 import { clearTokens, getAccessToken } from '../utils/auth.js';
 
 function Navbar() {
-    const {cartItems} = useCart();
+    const {cartItems, refreshAuth, isLoggedIn} = useCart();
     const navigate = useNavigate();
     
     const cartCount = cartItems.reduce((total, item) => total + item.quantity, 0);
-    
-    const isLoggedIn = !!getAccessToken();
 
     const handleLogout = () => {
         clearTokens();
+        refreshAuth();
         navigate('/login');
     };
     return (
@@ -38,7 +37,7 @@ function Navbar() {
                 )}
             </div>
 
-            <Link to='/cart' className='relative text-gray-800 hover:text-gray-600 font-medium'>
+            <Link to={isLoggedIn ? '/cart' : '/login'} className='relative text-gray-800 hover:text-gray-600 font-medium'>
                 🛒 Cart
                 {cartCount > 0 && (
                     <span className='absolute -top-2 -right-3 bg-red-500 text-white text-xs font-bold rounded-full px-2'>

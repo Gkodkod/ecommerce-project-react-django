@@ -1,19 +1,32 @@
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function CartPage() {
-    const { cartItems,total, removeFromCart, updateQuantity } = useCart();
+    const { cartItems,total, removeFromCart, updateQuantity, isLoggedIn } = useCart();
     const BASEURL = import.meta.env.VITE_DJANGO_BASE_URL;
-    console.log("Cart Items:", cartItems);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            navigate("/login");
+            console.log('User not logged in');
+        }
+    }, [isLoggedIn, navigate]);
 
     return (
         <div className="pt-20 min-h-screen bg-gray-100 p-8">
             <h1 className="text-3xl font-bold mb-6 text-center">🛒 Your Cart</h1>
-            {cartItems.length === 0 ? (
+            {!isLoggedIn ? (
+                <div className="text-center">
+                    <p className="text-gray-600 mb-4">You need to be logged in to view your cart.</p>
+                    <Link to="/login" className="bg-blue-600 text-white px-6 py-2 rounded-lg">Login Now</Link>
+                </div>
+            ) : cartItems.length === 0 ? (
                 <p className="text-center text-gray-600">Your cart is empty.</p>
             ) : (
                 <div className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-                    {cartItems.map((item) => (
+                    {cartItems.map((/** @type {any} */ item) => (
                         <div
                             key={item.id}
                             className="flex items-center justify-between mb-4"
